@@ -7,6 +7,11 @@ $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $url        = 'https://download.microsoft.com/download/D/8/1/D81E5DD6-1ABB-46B0-9B4B-21894E18B77F/rewrite_x86_en-US.msi'
 $url64      = 'https://download.microsoft.com/download/1/2/8/128E2E22-C1B9-44A4-BE2A-5859ED1D4592/rewrite_amd64_en-US.msi'
 
+$logFileDir = "$env:TEMP\chocolatey\$packageName"
+#Ensure that exists
+mkdir $logFileDir -ErrorAction SilentlyContinue
+$logFileName = "$logFileDir\$packageName.MsiInstall.log"
+
 $packageArgs = @{
   packageName   = $packageName
   unzipLocation = $toolsDir
@@ -14,7 +19,7 @@ $packageArgs = @{
   url           = $url
   url64bit      = $url64
 
-  silentArgs    = "/qn /norestart /l*v `"$env:TEMP\chocolatey\$($packageName)\$($packageName).MsiInstall.log`""
+  silentArgs    = "/qn /norestart /l*v `"$($logFileName)`""
   validExitCodes= @(0, 3010, 1641)
 
   softwareName  = 'IIS URL Rewrite Module 2'
